@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+    <title>D3 Block-a-Day: Day 1, January 1, 2016</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+<style>
+    .h-bar {
+        min-height: 40px;
+        min-width: 10px;
+        background-color: steelblue;
+        margin-bottom: 2px;
+        font: 20px sans-serif;
+        color: #f0f8ff;
+        text-align: left;
+        padding-left: 7px;
+      	padding-top: 20px;
+    }
+
+    .control-group {
+        padding-top: 10px;
+        margin: 10px;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .selected {
+        background-color: #f08080;
+    }
+</style>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        var data = [ // <-A
+            {percent_proficient: 70, school_name: "Brush Creek Elementary School", category: "Elementary"},
+            {percent_proficient: 65, school_name: "Horizons Elementary School", category: "Elementary"},
+            {percent_proficient: 90, school_name: "Barack Obama Elementary School", category: "Elementary"},
+            {percent_proficient: 50, school_name: "First Steps Elementary School", category: "Elementary"},
+            {percent_proficient: 60, school_name: "Wood River Valley Elementary School", category: "Elementary"},
+            {percent_proficient: 45, school_name: "Mountainview Middle School", category: "Middle"},
+            {percent_proficient: 55, school_name: "Skyline Middle School", category: "Middle"},
+            {percent_proficient: 30, school_name: "Davis Middle School", category: "Middle"},
+            {percent_proficient: 70, school_name: "New Horizons Middle School", category: "Middle"},
+            {percent_proficient: 30, school_name: "Riverview High School", category: "High"},
+            {percent_proficient: 60, school_name: "Walker High School", category: "High"}
+        ];
+        function render(data, category) {
+            d3.select("body").selectAll("div.h-bar") // <-B
+                    .data(data)
+    			.enter()
+                .append("div")
+                    .attr("class", "h-bar")
+    			.append("span");
+            d3.select("body").selectAll("div.h-bar") // <-C
+                    .data(data)
+                .exit().remove();
+            d3.select("body").selectAll("div.h-bar") // <-D
+                    .data(data)
+                .attr("class", "h-bar")
+                .style("width", function (d) {
+                    return (d.percent_proficient * 10) + "px";}
+                )
+                .select("span")
+                    .text(function (d) {
+                        return d.school_name + ' (' + d.percent_proficient + '%)';
+                    });
+            d3.select("body").selectAll("div.h-bar")
+                    .filter(function (d, i) { // <-E
+                        return d.category == category;
+                    })
+                    .classed("selected", true);
+        }
+        render(data);
+        function select(category) {
+            render(data, category);
+        }
+    </script>
+
+    <div class="control-group">
+        <button onclick="select('Elementary')">
+            Elementary School
+        </button>
+        <button onclick="select('Middle')">
+            Middle School
+        </button>
+        <button onclick="select('High')">
+            High School
+        </button>
+        <button onclick="select()">
+            Clear
+        </button>
+    </div>
+
+</body>
