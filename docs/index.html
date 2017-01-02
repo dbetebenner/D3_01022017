@@ -1,97 +1,97 @@
 <!DOCTYPE html>
-<head>
 <meta charset="utf-8">
-    <title>D3 Block-a-Day: Day 1, January 1, 2016</title>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-<style>
-    .h-bar {
-        min-height: 40px;
-        min-width: 10px;
-        background-color: steelblue;
-        margin-bottom: 2px;
-        font: 20px sans-serif;
-        color: #f0f8ff;
-        text-align: left;
-        padding-left: 7px;
-      	padding-top: 20px;
+<head>
+    <title>D3 Block-a-Day: Day 2, January 2, 2016</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <script src="https://d3js.org/d3.v4.min.js"></script> <!-- Load the d3.js library -->
+    <style> /* set the CSS */
+
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 2px;
     }
 
-    .control-group {
-        padding-top: 10px;
-        margin: 10px;
-    }
-
-    .clear {
-        clear: both;
-    }
-
-    .selected {
-        background-color: #f08080;
-    }
-</style>
+    </style>
 </head>
 
 <body>
+<script>
 
-    <script type="text/javascript">
-        var data = [ // <-A
-            {percent_proficient: 70, school_name: "Brush Creek Elementary School", category: "Elementary"},
-            {percent_proficient: 65, school_name: "Horizons Elementary School", category: "Elementary"},
-            {percent_proficient: 90, school_name: "Barack Obama Elementary School", category: "Elementary"},
-            {percent_proficient: 50, school_name: "First Steps Elementary School", category: "Elementary"},
-            {percent_proficient: 60, school_name: "Wood River Valley Elementary School", category: "Elementary"},
-            {percent_proficient: 45, school_name: "Mountainview Middle School", category: "Middle"},
-            {percent_proficient: 55, school_name: "Skyline Middle School", category: "Middle"},
-            {percent_proficient: 30, school_name: "Davis Middle School", category: "Middle"},
-            {percent_proficient: 70, school_name: "New Horizons Middle School", category: "Middle"},
-            {percent_proficient: 30, school_name: "Riverview High School", category: "High"},
-            {percent_proficient: 60, school_name: "Walker High School", category: "High"}
-        ];
-        function render(data, category) {
-            d3.select("body").selectAll("div.h-bar") // <-B
-                    .data(data)
-    			.enter()
-                .append("div")
-                    .attr("class", "h-bar")
-    			.append("span");
-            d3.select("body").selectAll("div.h-bar") // <-C
-                    .data(data)
-                .exit().remove();
-            d3.select("body").selectAll("div.h-bar") // <-D
-                    .data(data)
-                .attr("class", "h-bar")
-                .style("width", function (d) {
-                    return (d.percent_proficient * 10) + "px";}
-                )
-                .select("span")
-                    .text(function (d) {
-                        return d.school_name + ' (' + d.percent_proficient + '%)';
-                    });
-            d3.select("body").selectAll("div.h-bar")
-                    .filter(function (d, i) { // <-E
-                        return d.category == category;
-                    })
-                    .classed("selected", true);
-        }
-        render(data);
-        function select(category) {
-            render(data, category);
-        }
-    </script>
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 50, left: 70},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-    <div class="control-group">
-        <button onclick="select('Elementary')">
-            Elementary School
-        </button>
-        <button onclick="select('Middle')">
-            Middle School
-        </button>
-        <button onclick="select('High')">
-            High School
-        </button>
-        <button onclick="select()">
-            Clear
-        </button>
-    </div>
+// parse the date / time
+var parseTime = d3.timeParse("%d-%b-%y");
 
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the line
+var valueline = d3.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.close); });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.csv("data.csv", function(error, data) {
+  if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+      d.date = parseTime(d.date);
+      d.close = +d.close;
+  });
+
+  // Scale the range of the data
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain([0, d3.max(data, function(d) { return d.close; })]);
+
+  // Add the valueline path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline);
+
+  // Add the x Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // text label for the x axis
+  svg.append("text")
+      .attr("transform",
+            "translate(" + (width/2) + " ," +
+                           (height + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Date");
+
+  // Add the y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+  // text label for the y axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Value");
+
+});
+
+</script>
 </body>
