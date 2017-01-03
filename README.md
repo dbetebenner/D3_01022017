@@ -1,6 +1,6 @@
 # D3 Block-a-Day: Day 2, January, 2nd 2017
 
-<a href="https://dbetebenner.github.io/D3_01022017/"><img src="https://gist.githubusercontent.com/dbetebenner/b9fd5200827c6057180aea837d1b6002/raw/56fb9f315373d229f1424da31cf1e1f1dfb791bb/preview.png" align="left" hspace="12" vspace="5"></a>
+<a href="https://dbetebenner.github.io/D3_01022017/"><img src="https://gist.githubusercontent.com/dbetebenner/b9fd5200827c6057180aea837d1b6002/raw/56fb9f315373d229f1424da31cf1e1f1dfb791bb/preview.png" align="left" hspace="12" vspace="3"></a>
 
 New Year's Resolution for 2017: Make a D3 Block a day to teach myself D3. This is Number 2. Working my way
 through Nick Qi Zhu's [Data Visualization with D3.js Cookbook](https://www.amazon.com/Data-Visualization-D3-js-Cookbook-Nick/dp/178216216X).
