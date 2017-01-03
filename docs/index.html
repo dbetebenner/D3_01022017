@@ -9,7 +9,7 @@
     body {
 				font: 20px Helvetica Neue;
 		}
-      
+
     .line {
         fill: none;
       	stroke-linecap: "round";
@@ -17,11 +17,11 @@
         stroke: darkgrey;
         stroke-width: 2px;
     }
-    
+
     .xaxis {
       	font: 12px Helvetica Neue;
      }
-      
+
      .yaxis {
       	font: 14px Helvetica Neue;
      }
@@ -82,8 +82,8 @@ d3.csv("data.csv", function(error, data) {
   // Add the x Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-  		.attr("class", "xaxis");
+      .call(d3.axisBottom(x).ticks(5))
+      .attr("class", "xaxis");
 
   // text label for the x axis
   svg.append("text")
